@@ -1,0 +1,73 @@
+{
+	"id": "col_injecttest005-default",
+	"stages": [{
+		"type": "indexing-rpc",
+		"id": "gm3c6himw0novfgvi",
+		"mappingRules": [{
+			"path": "/response/raw_entity",
+			"target": "MYRESPONSE",
+			"append": false,
+			"xml": false
+		}, {
+			"path": "/response/raw_entity",
+			"target": "MYLEVEL001",
+			"append": false,
+			"xml": false
+		}, {
+			"path": "/response/result/doc[1]",
+			"target": "MYTEST",
+			"append": false,
+			"xml": false
+		}],
+		"debug": true,
+		"params": {
+			"uri": "http://f7searchstageb1.statcan.ca:7773/solr/col_richtest/select",
+			"method": "get",
+			"queryParams": {
+				"q": "*:*",
+				"wt": "json",
+				"indent": "off",
+				"fl": "id"
+			},
+			"headers": {
+				"Content-Type": "application/json"
+			}
+		},
+		"hasNoSideEffects": false,
+		"type": "indexing-rpc",
+		"skip": false,
+		"label": "stgRestQueryInjectTest005",
+		"secretSourceStageId": "gm3c6himw0novfgvi"
+	}, {
+		"type": "index-logging",
+		"id": "fbqzdymsrhbzqia4i",
+		"detailed": true,
+		"type": "index-logging",
+		"skip": false,
+		"label": "logginginjectest005_001",
+		"secretSourceStageId": "fbqzdymsrhbzqia4i"
+	}, {
+		"type": "field-mapping",
+		"id": "736ccd0c-d475-4618-9320-030443140f5d",
+		"mappings": [],
+		"reservedFieldsMappingAllowed": false,
+		"type": "field-mapping",
+		"skip": false,
+		"label": "field-mapping",
+		"secretSourceStageId": "736ccd0c-d475-4618-9320-030443140f5d"
+	}, {
+		"type": "solr-index",
+		"id": "74a9870f-d665-446e-8b1a-16bc4e0f1b73",
+		"enforceSchema": true,
+		"dateFormats": [],
+		"params": [],
+		"bufferDocsForSolr": false,
+		"type": "solr-index",
+		"skip": false,
+		"label": "solr-index",
+		"secretSourceStageId": "74a9870f-d665-446e-8b1a-16bc4e0f1b73"
+	}],
+	"properties": {
+		"secretSourcePipelineId": "col_injecttest005-default"
+	}
+}

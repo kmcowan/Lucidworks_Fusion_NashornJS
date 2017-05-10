@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+     <blockquote><em>If you reveal your secrets to the wind, you should not blame the wind for revealing them to the trees. — Kahlil Gibran</em></blockquote>
+<p>Solr's strength lies primarily in its ability to rapidly index and query vast troves of data.  With this powerful ability, however,  come certain caveats.  One caveat in particular remains a vitally important consideration when planning your Solr environment: Security.</p>
+<p>By its very nature, security is something of an enigma.  Documentation is often limited, and is often provided on a strict "need-to-know" basis.  In the programming world, security failure response messages are often vague or even non-existent.  Further, because security is by design restrictive, it can be problematic. Despite these hurdles, it remains a critical necessity to any enterprise.</p>
+<p>When you first install and startup Solr, you'll notice that no authentication is required.  Out-of-the-box, Solr is unsecured.  Thus your first consideration is to <strong>make sure that Solr is behind an appropriately-configured firewall</strong>, <strong>and that user permissions on Solr instances are properly locked down.  The user under which Solr runs should only have 'write' access to the Solr root directory. </strong> The firewall layer is really the front line of your defense strategy.  From there, you'll want to consider a variety of software security layers.   The final configuration would, of course, depend on the nature of your application, so it's a good idea to have a solid architecture and corresponding use cases in mind prior to creating a security plan.</p>
+<p>As previously mentioned, once you have your hardware firewall established, you'll want to consider the various possible layers of software security.  This would include antivirus/trojan/malware prevention, detection and eradiction applications, real-time behavior monitoring capable of alerting critical users when odd behavior begins to occur,  DDOS (Direct Denial of Service) attack detections software, data encryption software, and so on.  The combinations are literally limitless, and again, will depend on the end goal of your project.</p>
+<p>With your software security layer in place, you can begin <a href="https://cwiki.apache.org/confluence/display/solr/Securing+Solr">securing Solr</a> directly.</p>
+<p>Solr is capable of integrating with a variety of third-party authentication frameworks, including LDAP and provides native support for Kerberos.  Since the 5.2 release, it also comes with built-in support for <a href="https://cwiki.apache.org/confluence/display/solr/Basic+Authentication+Plugin">Basic Authentication</a>.  Basic Authentication will allow you to secure Solr's admin console, as well as provide collection level granularity.</p>
+<p>Beyond console and collection-level security, it is considered best practice to put your own application service in front of Solr, and using, for example, the <a href="https://cwiki.apache.org/confluence/display/solr/Using+SolrJ">SolrJ</a> library to communicate with Solr.</p>
+<p>In summary, securing your Solr environment requires a good deal of planning and forethought.  There are several layers of security that must be addressed in order to make sure your environment is secured from malicious attacks.</p>
+<h2><strong>In a Nutshell:</strong></h2>
+<ol>
+<li>Solr is by default and by design, completely unsecured out-of-the-box. <strong> It is vitally important that your Solr instance is behind a firewall, and that box level security is appropriate and limited to only critical users.</strong></li>
+<li>Choose the appropriate suite of software security tools to provide protection against malware, DDOS attacks, and so on.</li>
+<li>Use the Solr BasicAuthentication plugin, or other supported services, to secure the Solr console and collections.</li>
+<li>Create a custom service to provide communication between your client applications and Solr.</li>
+</ol>
+<p> </p>
+<h2><strong>Important Note:</strong></h2>
+<p><strong>     If you've followed these measures, your Solr instance should be effectively secure, including from a recently-discovered vulnerability in Solr that would potentially allow a cross-traversal exploit of the replication API.  This vulnerability has been patched.  <span class="wysiwyg-underline">It is <span style="text-decoration: underline;">highly-recommended</span> that Solr 5.x users upgrade their Solr instance to 5.5.4 and all 6.x users upgrade to 6.4.2</span>.  </strong>   </p>
+<h2><strong>Futher Reading:</strong></h2>
+<ul>
+<li><a href="/knowledge/articles/115003505507/en-us?brand_id=2289156">Document Level Security in Solr</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/solr/Securing+Solr">Securing Solr</a></li>
+</ul>
+<p> </p>
+    </body>
+</html>
