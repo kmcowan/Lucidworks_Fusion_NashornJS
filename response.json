@@ -1,0 +1,23 @@
+{
+    "responseHeader": {
+        "zkConnected": true,
+        "status": 0,
+        "QTime": 0,
+        "params": {
+            "q": "*:*",
+            "indent": "on",
+            "fl": "keywords, subjects",
+            "wt": "json"
+        }
+    },
+    "response": {
+        "numFound": 1,
+        "start": 0,
+        "docs": [
+            {
+                "keywords": ["awesome keywords below."],
+                "subjects": ["terrible subjects there."]
+            }]
+
+    }
+}
