@@ -1,0 +1,225 @@
+{
+    "id": "fees",
+    "stages": [
+        {
+            "type": "request-parser",
+            "id": "bw4",
+            "jsonParam": "payload",
+            "solrDistrib": true,
+            "hintTopFc": false,
+            "debugQuery": false,
+            "skip": false,
+            "label": "request-parser"
+        },
+        {
+            "type": "fees-request-modification",
+            "id": "zxj",
+            "calculatedFields": [
+                {
+                    "calculatedField": "total_fees_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "amount_td"
+                    ]
+                },
+                {
+                    "calculatedField": "fees_waived_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "fees_waived_td"
+                    ]
+                },
+                {
+                    "calculatedField": "fees_reversed_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "fees_reversed_td"
+                    ]
+                },
+                {
+                    "calculatedField": "fee_charged_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "fee_charged_td"
+                    ]
+                }
+            ],
+            "slgFields": [
+                {
+                    "originalField": "tier_s",
+                    "actualField": "tier_slg_s"
+                },
+                {
+                    "originalField": "contact_s",
+                    "actualField": "contact_slg_s"
+                },
+                {
+                    "originalField": "phone_disp_s",
+                    "actualField": "phone_disp_slg_s"
+                },
+                {
+                    "originalField": "email_addr_disp_s",
+                    "actualField": "email_addr_disp_slg_s"
+                },
+                {
+                    "originalField": "total_assets_td",
+                    "actualField": "total_assets_slg_td"
+                }
+            ],
+            "hhFields": [
+                {
+                    "originalField": "tier_s",
+                    "actualField": "tier_hh_s"
+                },
+                {
+                    "originalField": "contact_s",
+                    "actualField": "contact_hh_s"
+                },
+                {
+                    "originalField": "phone_disp_s",
+                    "actualField": "phone_disp_hh_s"
+                },
+                {
+                    "originalField": "email_addr_disp_s",
+                    "actualField": "email_addr_disp_hh_s"
+                },
+                {
+                    "originalField": "total_assets_td",
+                    "actualField": "total_assets_hh_td"
+                },
+                {
+                    "originalField": "household_s",
+                    "actualField": "household_hh_s"
+                }
+            ],
+            "skip": false,
+            "label": "fees-request-modification",
+            "condition": "request.getFirstParam(\"view\").equals(\"SLG\") || request.getFirstParam(\"view\").equals(\"HH\") || request.getFirstParam(\"view\").equals(\"ACCT\");"
+        },
+        {
+            "type": "pivot-stats",
+            "id": "qai",
+            "calculatedFields": [
+                {
+                    "calculatedField": "total_fees_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "amount_td"
+                    ]
+                },
+                {
+                    "calculatedField": "fees_waived_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "fees_waived_td"
+                    ]
+                },
+                {
+                    "calculatedField": "fees_reversed_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "fees_reversed_td"
+                    ]
+                },
+                {
+                    "calculatedField": "fee_charged_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "fee_charged_td"
+                    ]
+                }
+            ],
+            "skip": false,
+            "label": "pivot-stats",
+            "condition": "request.getFirstParam(\"view\").equals(\"SLG\") || request.getFirstParam(\"view\").equals(\"HH\");"
+        },
+        {
+            "type": "fees-group-view-context-change",
+            "id": "bmh",
+            "skip": false,
+            "label": "fees-group-view-context-change",
+            "condition": "request.getFirstParam(\"view\").equals(\"SLG\") || request.getFirstParam(\"view\").equals(\"HH\");"
+        },
+        {
+            "type": "pivot-stats",
+            "id": "mk3",
+            "calculatedFields": [
+                {
+                    "calculatedField": "total_fees_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "amount_td"
+                    ]
+                },
+                {
+                    "calculatedField": "fees_waived_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "fees_waived_td"
+                    ]
+                },
+                {
+                    "calculatedField": "fees_reversed_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "fees_reversed_td"
+                    ]
+                },
+                {
+                    "calculatedField": "fee_charged_td",
+                    "function": "SUM",
+                    "solrFields": [
+                        "fee_charged_td"
+                    ]
+                }
+            ],
+            "skip": false,
+            "label": "pivot-stats",
+            "condition": "request.getFirstParam(\"view\").equals(\"SLG\") || request.getFirstParam(\"view\").equals(\"HH\") || request.getFirstParam(\"view\").equals(\"ACCT\");"
+        },
+        {
+            "type": "query-solr",
+            "id": "72q",
+            "collapseField": "key_acct_s",
+            "logSolrRequest": true,
+            "skip": false,
+            "label": "query-solr",
+            "condition": "((request.getFirstParam(\"view\").equals(\"SLG\") || request.getFirstParam(\"view\").equals(\"HH\") || request.getFirstParam(\"view\").equals(\"ACCT\")) && (request.hasParam(\"includeActivityInfo\") && request.getFirstParam(\"includeActivityInfo\").equals(\"false\")));"
+        },
+        {
+            "type": "query-solr",
+            "id": "ffd",
+            "logSolrRequest": true,
+            "skip": false,
+            "label": "query-solr",
+            "condition": "request.getFirstParam(\"view\").equals(\"FEESDETAILS\") || (request.hasParam(\"includeActivityInfo\") && request.getFirstParam(\"includeActivityInfo\").equals(\"true\"));"
+        },
+        {
+            "type": "fees-append-fees-details-merge",
+            "id": "r7",
+            "skip": false,
+            "label": "fees-append-fees-details-merge",
+            "condition": "request.hasParam(\"includeActivityInfo\") && request.getFirstParam(\"includeActivityInfo\").equals(\"true\");"
+        },
+        {
+            "type": "pivot-stats-merge",
+            "id": "r8",
+            "skip": false,
+            "label": "pivot-stats-merge",
+            "condition": "request.getFirstParam(\"view\").equals(\"SLG\") || request.getFirstParam(\"view\").equals(\"HH\") || request.getFirstParam(\"view\").equals(\"ACCT\");"
+        },
+        {
+            "type": "fees-group-view-response-merge",
+            "id": "mvt",
+            "skip": false,
+            "label": "fees-group-view-response-merge",
+            "condition": "request.getFirstParam(\"view\").equals(\"SLG\") || request.getFirstParam(\"view\").equals(\"HH\");"
+        },
+        {
+            "type": "response-builder",
+            "id": "9",
+            "skip": false,
+            "label": "response-builder"
+        }
+    ]
+}

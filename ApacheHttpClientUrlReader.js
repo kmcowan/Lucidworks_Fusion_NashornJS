@@ -28,7 +28,7 @@ result = new StringBuffer();
             request.addHeader("User-Agent", userAgent);
             var response = client.execute(request);
 
-            logger.infor("RESPONSE Code : " + response.getStatusLine().getStatusCode());
+            logger.info("RESPONSE Code : " + response.getStatusLine().getStatusCode());
 
             var rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 

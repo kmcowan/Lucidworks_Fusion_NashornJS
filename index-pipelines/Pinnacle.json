@@ -1,0 +1,222 @@
+{
+  "id" : "Pinnacle",
+  "stages" : [ {
+    "type" : "javascript-index",
+    "id" : "02otj4i",
+    "script" : "function (doc) {\n    var e = java.lang.Exception;\n    var err = java.lang.Error;\n    if (doc !== null && doc.getId() !== null) {\n        try {\n            var sig = doc.getFirstFieldValue(\"signature_s\");\n            if (sig)\n            {\n                var obj = JSON.parse(sig);\n                doc.addField(\"item_type\", obj.type);\n            }\n        } catch (e) {\n            logger.error(e);\n        }  \n    }\n    return doc;\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "Signature parser",
+    "condition" : "doc.hasField(\"signature_s\")",
+    "secretSourceStageId" : "02otj4i"
+  }, {
+    "type" : "javascript-index",
+    "id" : "2tbuik9",
+    "script" : "    if (doc !== null && doc.getId() !== null) {\n        var e = java.lang.Exception;\n        try {\n            var skipTypes = [\"Site\", \"Folder\", \"GenericList\", \"DocumentLibrary\"];\n\n            if (doc.hasField(\"ows_serverurl_s\")) {\n\n                if (doc.getFirstFieldValue(\"ows_serverurl_s\").startsWith(\"/sai/Lists/Alert Configuration List/\") ||\n                        doc.getFirstFieldValue(\"ows_serverurl_s\").indexOf(\"/DropOffLibrary\") > -1 ||\n                        doc.getFirstFieldValue(\"ows_serverurl_s\").indexOf(\"/sai/research/Research3rdPartyDocuments\") > -1 ||\n                        doc.getFirstFieldValue(\"ows_serverurl_s\").indexOf(\"/sai/research/Pages\") > -1 ||\n                        doc.getFirstFieldValue(\"ows_serverurl_s\").indexOf(\"/SitePages/\") > -1) {\n                    return doc;\n                }\n            }\n\n            if (doc.hasField(\"id\")) {\n                if (doc.getFirstFieldValue(\"id\").indexOf(\"://\") < 0) { //the id field will contain the url in the form of 'https://' or http:// or 'file://'. Return null if it doesn't have '://'\n                    return doc;\n                }\n\n\n            }\n            if (doc.hasField(\"item_type\")) {\n                var val = doc.getFirstFieldValue(\"item_type\");\n                for (i = 0; i < skipTypes.length; i++) {\n                    if (skipTypes[i].equals(val)) {\n                        return doc;\n                    }\n                }\n            }\n        } catch (e) {\n            logger.error(e);\n        }\n    }\n    return doc;\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "Item type filter",
+    "secretSourceStageId" : "2tbuik9"
+  }, {
+    "type" : "javascript-index",
+    "id" : "hv45nrk9",
+    "script" : "function (doc) {\n    if (doc !== null && doc.getId() !== null) {\n        var e = java.lang.Exception;\n        try {\n            var fields = doc.getFields(\"ows_manager\");\n            if (fields)\n            {\n                var list = [];\n                for (var i = 0; i < fields.size(); i++) {\n                    var value = fields.get(i).getValue();\n                    if (value.contains(\";#\")) {\n                        var split = value.split(\";#\");\n                        if (split.length == 0) {\n                            return doc;\n                        }\n\n                        if (split.length % 2 == 1) {\n                            logger.info(\"Uneven amount of segments in field: \" + split.length + \": \" + value);\n                            return doc;\n                        }\n                        for (var j = 1; j < split.length; j += 2) {\n                            var temp = split[j];\n                            if (temp)\n                            {\n                                list.push(temp);\n                            }\n                        }\n                    }\n                }\n                if (list.length > 0 || (doc.getFirstFieldValue(\"ows_manager\") != null && \n                        doc.getFirstFieldValue(\"ows_manager\").isEmpty())) {\n                    doc.removeFields(\"ows_manager\");\n                    for (i = 0; i < list.length; i++) {\n                        doc.addField(\"ows_manager\", list[i]);\n                    }\n                }\n            }\n\n        } catch (e) {\n            logger.error(e);\n        }\n    }\n    return doc;\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "Manager splitter",
+    "secretSourceStageId" : "hv45nrk9"
+  }, {
+    "type" : "javascript-index",
+    "id" : "d8smjchs4uwiv0a4i",
+    "script" : "function (doc) {\n    if (doc !== null && doc.getId() !== null) {\n        var e = java.lang.Exception;\n        try {\n            var fields = doc.getFields(\"ows_fundid\");\n            if (fields)\n            {\n                var list = [];\n                for (var i = 0; i < fields.size(); i++) {\n                    var value = fields.get(i).getValue();\n                    if (value.contains(\";#\")) {\n                        var split = value.split(\";#\");\n                        if (split.length == 0) {\n                            return doc;\n                        }\n\n                        if (split.length % 2 == 1) {\n                            logger.info(\"Uneven amount of segments in field: \" + split.length + \": \" + value);\n                            return doc;\n                        }\n                        for (var j = 1; j < split.length; j += 2) {\n                            var temp = split[j];\n                            if (temp)\n                            {\n                                list.push(temp);\n                            }\n                        }\n                    }\n                }\n                if (list.length > 0 || (doc.getFirstFieldValue(\"ows_fundid\") != null && doc.getFirstFieldValue(\"ows_fundid\").isEmpty())) {\n                    doc.removeFields(\"ows_fundid\");\n                    for (i = 0; i < list.length; i++) {\n                        doc.addField(\"ows_fundid\", list[i]);\n                    }\n                }\n            }\n\n        } catch (e) {\n            logger.error(e);\n        }\n    }\n    return doc;\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "FundID Splitter",
+    "secretSourceStageId" : "d8smjchs4uwiv0a4i"
+  }, {
+    "type" : "javascript-index",
+    "id" : "t9r640u83yf5s46lxr",
+    "script" : "function (doc) {\n    if (doc !== null && doc.getId() !== null) {\n        var e = java.lang.Exception;\n        try {\n            var fields = doc.getFields(\"ows_fundticker\");\n            if (fields)\n            {\n                var list = [];\n                for (var i = 0; i < fields.size(); i++) {\n                    var value = fields.get(i).getValue();\n                    if (value.contains(\";#\")) {\n                        var split = value.split(\";#\");\n                        if (split.length == 0) {\n                            return doc;\n                        }\n\n\n                        if (split.length % 2 == 1) {\n                            logger.info(\"Uneven amount of segments in field: \" + split.length + \": \" + value);\n                            return doc;\n                        }\n                        for (var j = 1; j < split.length; j += 2) {\n                            var temp = split[j];\n                            if (temp)\n                            {\n                                list.push(temp);\n                            }\n                        }\n                    }\n                }\n                if (list.length > 0 || (doc.getFirstFieldValue(\"ows_fundticker\") != null && doc.getFirstFieldValue(\"ows_fundticker\").isEmpty())) {\n                    doc.removeFields(\"ows_fundticker\");\n                    for (i = 0; i < list.length; i++) {\n                        doc.addField(\"ows_fundticker\", list[i]);\n                    }\n                }\n            }\n\n        } catch (e) {\n            logger.error(e);\n        }\n    }\n    return doc;\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "FundTicker Splitter",
+    "secretSourceStageId" : "t9r640u83yf5s46lxr"
+  }, {
+    "type" : "javascript-index",
+    "id" : "2cbkzrfqs7om9529",
+    "script" : "function (doc) {\n\n    if (doc !== null && doc.getId() !== null) {\n        var e = java.lang.Exception;\n        try {\n\n\n            var fields = doc.getFields(\"ows_fundshortname\");\n            if (fields)\n            {\n                var list = [];\n                for (var i = 0; i < fields.size(); i++) {\n                    var value = fields.get(i).getValue();\n                    if (value.contains(\";#\")) {\n                        var split = value.split(\";#\");\n                        if (split.length == 0) {\n                            return doc;\n                        }\n\n\n                        if (split.length % 2 == 1) {\n                            logger.info(\"Uneven amount of segments in field: \" + split.length + \": \" + value);\n                            return doc;\n                        }\n                        for (var j = 1; j < split.length; j += 2) {\n                            var temp = split[j];\n                            if (temp)\n                            {\n                                list.push(temp);\n                            }\n                        }\n                    }\n                }\n                if (list.length > 0 || (doc.getFirstFieldValue(\"ows_fundshortname\") != null && \n                        doc.getFirstFieldValue(\"ows_fundshortname\").isEmpty())) {\n                    doc.removeFields(\"ows_fundshortname\");\n                    for (i = 0; i < list.length; i++) {\n                        doc.addField(\"ows_fundshortname\", list[i]);\n                    }\n                }\n            }\n\n        } catch (e) {\n            logger.error(e);\n        }\n    }\n    return doc;\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "FundShortName Splitter",
+    "secretSourceStageId" : "2cbkzrfqs7om9529"
+  }, {
+    "type" : "javascript-index",
+    "id" : "qswkkhkohemrysyvi",
+    "script" : "function (doc) {\n    if (doc !== null && doc.getId() !== null) {\n        var e = java.lang.Exception;\n        try {\n            var fields = doc.getFields(\"ows_contentowners\");\n            if (fields)\n            {\n                var list = [];\n                for (var i = 0; i < fields.size(); i++) {\n                    var value = fields.get(i).getValue();\n                    if (value.contains(\";#\")) {\n                        var split = value.split(\";#\");\n                        if (split.length == 0) {\n                            return doc;\n                        }\n\n                        if (split.length % 2 == 1) {\n                            logger.info(\"Uneven amount of segments in field: \" + split.length + \": \" + value);\n                            return doc;\n                        }\n                        for (var j = 1; j < split.length; j += 2) {\n                            var temp = split[j];\n                            if (temp)\n                            {\n                                list.push(temp);\n                            }\n                        }\n                    }\n                }\n                if (list.length > 0 || (doc.getFirstFieldValue(\"ows_contentowners\") != null && \n                        doc.getFirstFieldValue(\"ows_contentowners\").isEmpty())) {\n                    doc.removeFields(\"ows_contentowners\");\n                    for (i = 0; i < list.length; i++) {\n                        doc.addField(\"ows_contentowners\", list[i]);\n                    }\n                }\n            }\n\n        } catch (e) {\n            logger.error(e);\n        }\n    }\n    return doc;\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "ConentOwners Splitter",
+    "secretSourceStageId" : "qswkkhkohemrysyvi"
+  }, {
+    "type" : "javascript-index",
+    "id" : "q94ibe29",
+    "script" : "function (doc) {\n\n    if (doc !== null && doc.getId() !== null) {\n        var e = java.lang.Exception;\n        try {\n            var fields = doc.getFlattenedFields();\n            if (fields != null && fields.size() > 0) {\n                for (var i = 0; i < fields.size(); i++) {\n                    var f = fields.get(i);\n                    if (f.getValue() && f.getValue().toString().match(/\\d;#.*/) != null) {\n                        f.setValue(f.getValue().substring(f.getValue().indexOf('#') + 1, f.getValue().length()));\n                    }\n\n                }\n            }\n\n        } catch (e) {\n            logger.error(e);\n        }\n    }\n    return doc;\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "Clean fields",
+    "secretSourceStageId" : "q94ibe29"
+  }, {
+    "type" : "javascript-index",
+    "id" : "8vtsatt9",
+    "script" : "var getQuarter = function (s) {\n    var qval = \"\";\n    if (s != null) {\n        var mydate = org.apache.solr.common.util.DateUtil.parseDate(s);\n        var q = Math.floor(mydate.getMonth() / 3) + 1;\n        var qval = mydate.getYear() + 1900;\n        return qval + \" Q\" + q;\n    }\n    return qval;\n}\n\n\nvar fncQuarter = function (doc) {\n\n    if (doc !== null && doc.getId() !== null) {\n        var e = java.lang.Exception;\n        try {\n\n\n            if (doc.hasField(\"ows_effectivedate\")) {\n                var hundreds_result = getQuarter(doc.getFirstFieldValue(\"ows_effectivedate\"));\n                doc.setField(\"effective_quarter\", hundreds_result);\n\n            }\n            if (doc.hasField(\"ows_publishdate\")) {\n                var seconds_result = getQuarter(doc.getFirstFieldValue(\"ows_publishdate\"));\n                doc.setField(\"published_quarter\", seconds_result);\n            }\n\n        } catch (e) {\n            logger.error(e);\n        }\n    }\n    return doc;\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "quarter generator",
+    "secretSourceStageId" : "8vtsatt9"
+  }, {
+    "type" : "tika-parser",
+    "id" : "snstt9",
+    "includeImages" : false,
+    "flattenCompound" : true,
+    "addFailedDocs" : true,
+    "addOriginalContent" : false,
+    "contentField" : "_raw_content_",
+    "contentEncoding" : "binary",
+    "returnXml" : false,
+    "keepOriginalStructure" : false,
+    "extractHtmlLinks" : true,
+    "extractOtherLinks" : false,
+    "includeContentTypes" : [ ],
+    "excludeContentTypes" : [ ],
+    "zipBombCompressionRatio" : 200,
+    "type" : "tika-parser",
+    "skip" : false,
+    "label" : "tika-parser",
+    "sourceField" : "_raw_content_",
+    "secretSourceStageId" : "snstt9",
+    "csvParsing" : true
+  }, {
+    "type" : "index-logging",
+    "id" : "9wnunx5yhn4jkyb9",
+    "detailed" : false,
+    "type" : "index-logging",
+    "skip" : true,
+    "label" : "Logging",
+    "secretSourceStageId" : "9wnunx5yhn4jkyb9"
+  }, {
+    "type" : "field-mapping",
+    "id" : "bjll3di",
+    "mappings" : [ {
+      "source" : "body",
+      "target" : "content",
+      "operation" : "move"
+    }, {
+      "source" : "ows_reportsubtype",
+      "target" : "ows_reportsubtype_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_product",
+      "target" : "ows_product_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_manager",
+      "target" : "ows_manager_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_additional_x0020_info",
+      "target" : "ows_additional_x0020_info_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "fetchedDate_dt",
+      "target" : "document_fetching_time",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_gaadepartment",
+      "target" : "department",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_gaaciodepartment",
+      "target" : "department",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_exec_x0020_department",
+      "target" : "department",
+      "operation" : "copy"
+    }, {
+      "source" : "Content-Length",
+      "target" : "file_size",
+      "operation" : "move"
+    }, {
+      "source" : "ows_author",
+      "target" : "author",
+      "operation" : "copy"
+    }, {
+      "source" : "value_s",
+      "target" : "",
+      "operation" : "delete"
+    }, {
+      "source" : "ows_reporttype",
+      "target" : "ows_reporttype_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_fundticker",
+      "target" : "ows_fundticker_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_fundshortname",
+      "target" : "ows_fundshortname_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_businessline",
+      "target" : "ows_businessline_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_additional_x0020_report_x0020_info",
+      "target" : "ows_additional_x0020_report_x0020_info_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows__dlc_docid",
+      "target" : "ows__dlc_docid_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_fundid",
+      "target" : "ows_fundid_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "department",
+      "target" : "department_txt",
+      "operation" : "copy"
+    }, {
+      "source" : "ows_abstract",
+      "target" : "ows_abstract_txt",
+      "operation" : "copy"
+    } ],
+    "reservedFieldsMappingAllowed" : false,
+    "type" : "field-mapping",
+    "skip" : false,
+    "label" : "field-mapping",
+    "secretSourceStageId" : "bjll3di"
+  }, {
+    "type" : "solr-index",
+    "id" : "90067fe4-910f-4892-9040-517542c667e2",
+    "enforceSchema" : true,
+    "dateFormats" : [ ],
+    "params" : [ ],
+    "bufferDocsForSolr" : false,
+    "type" : "solr-index",
+    "skip" : false,
+    "label" : "solr-index",
+    "secretSourceStageId" : "90067fe4-910f-4892-9040-517542c667e2"
+  }, {
+    "type" : "index-logging",
+    "id" : "v3ny9zzm6jeg3c8fr",
+    "detailed" : true,
+    "type" : "index-logging",
+    "skip" : true,
+    "label" : "Logging",
+    "secretSourceStageId" : "v3ny9zzm6jeg3c8fr"
+  } ],
+  "properties" : {
+    "secretSourcePipelineId" : "Pinnacle"
+  }
+}
