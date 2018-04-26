@@ -1,0 +1,56 @@
+[{
+        "id": "book1da",
+        "fields": [
+            {
+                "name": "type_s",
+                "value": "book"
+            },
+            {
+                "name": "title_t",
+                "value": "The Way of Kings"
+            },
+            {
+                "name": "author_s",
+                "value": "Brandon Sanderson"
+            },
+            {
+                "name": "cat_s",
+                "value": "fantasy"
+            },
+            {
+                "name": "pubyear_i",
+                "value": "2010"
+            },
+            {
+                "name": "publisher_s",
+                "value": "Tor"
+            },
+            {
+                "name": "_childDocuments_",
+                "value": [{
+                        "id": "book1_c1",
+                        "fields": [{
+                                "name": "type_s",
+                                "value": "review"
+                            },
+                            {
+                                "name": "review_dt",
+                                "value": "2015-01-03T14:30:00Z"
+                            },
+                            {
+                                "name": "stars_i",
+                                "value": "5"
+                            },
+                            {
+                                "name": "author_s",
+                                "value": "yonik"
+                            },
+                            {
+                                "name": "comment_t",
+                                "value": "A great start to what looks like an epic series!"
+                            }
+                        ]
+                    }]
+            }]
+    }
+]
