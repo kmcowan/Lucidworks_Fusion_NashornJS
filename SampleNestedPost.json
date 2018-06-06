@@ -1,0 +1,33 @@
+[{
+
+"id": "book1",
+
+"type_s": "book",
+
+"title_t": "The Way of Kings",
+
+"author_s": "Brandon Sanderson",
+
+"cat_s": "fantasy",
+
+"pubyear_i": "2010",
+
+"publisher_s": "Tor",
+
+"_childDocuments_": [{
+
+"id": "book1_c1",
+
+"type_s": "review",
+
+"review_dt": "2015-01-03T14:30:00Z",
+
+"stars_i": "5",
+
+"author_s": "yonik",
+
+"comment_t": "A great start to what looks like an epic series!"
+
+}]
+
+}]

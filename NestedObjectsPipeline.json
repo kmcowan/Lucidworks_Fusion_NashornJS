@@ -1,0 +1,68 @@
+{
+  "id" : "ATT_Nested_Documents",
+  "stages" : [ {
+    "type" : "json-parser",
+    "id" : "r64",
+    "sourceField" : "_raw_content_",
+    "sourceEncoding" : "binary",
+    "splitPath" : "/",
+    "mappingRules" : [ {
+      "path" : "/**"
+    } ],
+    "inheritFields" : false,
+    "type" : "json-parser",
+    "skip" : true,
+    "label" : "JSoN",
+    "secretSourceStageId" : "r64"
+  }, {
+    "type" : "javascript-index",
+    "id" : "jm",
+    "script" : "function(doc){\n    \n     \n    if(doc !== null && doc.getId() !== null){\n        logger.info(\"PARSING NESTED DOCUMENTS...\");\n         var doclist = java.util.ArrayList;\n        var Jsoup = org.jsoup.Jsoup;\n        var jdoc = org.jsoup.nodes.Document;\n        var ex = java.lang.Exception;\n        var Parser = org.jsoup.parser.Parser;\n        var element = org.jsoup.Element;\n        var pipelineDoc = com.lucidworks.apollo.common.pipeline.PipelineDocument;\n        var xmlstr = java.lang.String;\n        var docurl = java.lang.String;\n        var elements = org.jsoup.select.Elements;\n        var ele = org.jsoup.Element;\n        var outdocs = java.util.ArrayList;\n        \n        try{\n            var children = doc.getFirstFieldValue(\"_childDocuments\");\n            if(children !== null){\n                logger.info(\"Children: \"+children.toString());\n            } else {\n                logger.info(\"NO CHILDREN FOUND\");\n                logger.info(doc);\n            }\n        }catch(ex){\n            logger.error(ex);\n        }\n        return outdocs;\n    } else {\n    return doc;\n    }\n}",
+    "type" : "javascript-index",
+    "skip" : true,
+    "label" : "Parse_Documents_JS",
+    "secretSourceStageId" : "jm"
+  }, {
+    "type" : "javascript-index",
+    "id" : "af",
+    "script" : " function (doc) {\n\n\n        if (doc !== null && doc.getFirstFieldValue(\"_raw_content_\") !== null) {\n            logger.info(\"PARSING NESTED DOCUMENTS...\");\n            logger.info(\"*** RAW: \" + doc.getFirstFieldValue(\"_raw_content_\"));\n            // var raw = doc.getFirstFieldValue(\"_raw_content_\");\n            // if(raw !== null){\n            //    logger.info(\"Raw class: \"+ raw.getClass().getSimpleName()); \n            // }\n            var doclist = java.util.ArrayList;\n            var Jsoup = org.jsoup.Jsoup;\n            var jdoc = org.jsoup.nodes.Document;\n            var ex = java.lang.Exception;\n            var Parser = org.jsoup.parser.Parser;\n            var element = org.jsoup.Element;\n            var pipelineDoc = com.lucidworks.apollo.common.pipeline.PipelineDocument;\n            var xmlstr = java.lang.String;\n            var docurl = java.lang.String;\n            var elements = org.jsoup.select.Elements;\n            var ele = org.jsoup.Element;\n            var outdocs = java.util.ArrayList;\n            var ObjectMapper = org.codehaus.jackson.map.ObjectMapper;\n            var SerializationConfig = org.codehaus.jackson.map.SerializationConfig;\n            var String = java.lang.String;\n            var e = java.lang.Exception;\n            var base64 = java.util.Base64;\n            var String = java.lang.String;\n            var ArrayList =  java.util.ArrayList;\n\n            var decoder = base64.getDecoder();\n            var mapper = new ObjectMapper();\n            var pretty = true;\n            var result = new String(\"\");\n             outdocs = new ArrayList();\n             pipelineDoc = new com.lucidworks.apollo.common.pipeline.PipelineDocument();\n\n            try {\n                var rawlist = doc.getFieldValues(\"_raw_content_\");\n                raw = rawlist[0];\n                //  logger.info(\"raw: \"+ raw);\n                logger.info(\"Raw class: \" + raw.getClass().getSimpleName());\n                var stdin = new String(raw, \"UTF8\");\n                var JSONArray = org.json.JSONArray;\n                var JSONObject = org.json.JSONObject;\n                var Iterator = java.util.Iterator;\n\n                var json = JSON.parse(stdin);//new JSONObject(stdin);\n\n                //   var stdin = fromHex(raw);//new String(decoder.decode(raw));\n                logger.info(\"JSON: \" + stdin);\n                mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);\n\n\n\n                var children = json[0].fields;//doc.getFirstFieldValue(\"_childDocuments_\"); // _childDocuments\n                pipelineDoc.setId(json[0].id);\n                logger.info(\"document ID: \"+doc.getId());\n              \n                if (children !== null) {\n                    // result = JSON.stringify(result);//mapper.writerWithDefaultPrettyPrinter().writeValueAsString(children);\n                   // logger.info(\"Children: \" + children);\n                   for(var i=0; i<children.length; i++){\n                        var item = children[i];\n                        if(item.name === \"_childDocuments_\"){\n                            logger.info(\"FOUND CHILD DOCUMENTS ! \"+item.value.toString()); \n                            var cdocs = item.value;\n                            var childArray = new ArrayList();\n                            for(var c=0; c<cdocs.length; c++){\n                                var child = cdocs[c];\n                                var childPipeDoc = new com.lucidworks.apollo.common.pipeline.PipelineDocument();\n                                childPipeDoc.setId(child.id);\n                                childPipeDoc.addField(\"_parent\", json[0].id);\n                                for(var d=0; d<child.fields.length; d++){\n                                     var cfield = child.fields[d];\n                                     childPipeDoc.addField(cfield.name,cfield.value);\n                                }\n                              // childArray.add(childPipeDoc);\n                               outdocs.add(childPipeDoc);\n                            }\n                         // pipelineDoc.addField(\"_childDocuments_\", childArray);\n                        } else {\n                        //var pdoc = doc.newDocument();\n                        //outdocs.add(pdoc);\n                        pipelineDoc.addField(item.name, item.value);\n                        }\n                        \n                    }\n                } else {\n                    logger.info(\"NO CHILDREN FOUND\");\n\n\n                    try {\n                        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);\n\n\n                        if (pretty) {\n                            result = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(doc);\n                        } else {\n\n                            result = mapper.writeValueAsString(doc);\n                        }\n                        logger.info(\"**** DOCUMENT \" + result);\n\n                        var fields = doc.getFields();\n                        for each (var fieldName in fields.keySet()) {\n                            var field = doc.getFirstField(fieldName);\n                            // result += \"Field Name: \"+field.getName()+\" val: \"+field.getValue()+\"\\n\"; \n                        }\n                    } catch (e) {\n                        logger.error(e.getLocalizedMessage());\n                    }\n                }\n            } catch (ex) {\n                logger.error(ex.getLocalizedMessage());\n            }\n            logger.info(\"RETURN BRANCH 1\");\n            outdocs.add(pipelineDoc);\n            return outdocs;\n        } else {\n            logger.info(\"Doc ID was null\");\n          logger.info(\"RETURN BRANCH 2\");\n            return doc;\n        }\n        logger.info(\"RETURN BRANCH 3\");\n        return doc;\n    }",
+    "type" : "javascript-index",
+    "skip" : false,
+    "label" : "Parse_Documents_JS",
+    "secretSourceStageId" : "af"
+  }, {
+    "type" : "field-mapping",
+    "id" : "82f68441-3eb2-4334-91af-d506ab2be338",
+    "mappings" : [ ],
+    "reservedFieldsMappingAllowed" : false,
+    "type" : "field-mapping",
+    "skip" : false,
+    "label" : "field-mapping",
+    "secretSourceStageId" : "82f68441-3eb2-4334-91af-d506ab2be338"
+  }, {
+    "type" : "solr-dynamic-field-name-mapping",
+    "id" : "b781c0f6-9351-49a9-a6c0-a6abbbbd61ee",
+    "duplicateSingleValuedFields" : false,
+    "fieldsToExclude" : [ ],
+    "advancedTextFieldsIndexing" : true,
+    "maxTextLengthForAdvancedIndexing" : 100,
+    "type" : "solr-dynamic-field-name-mapping",
+    "skip" : false,
+    "label" : "solr-dynamic-field-name-mapping",
+    "secretSourceStageId" : "b781c0f6-9351-49a9-a6c0-a6abbbbd61ee"
+  }, {
+    "type" : "solr-index",
+    "id" : "dbbaeba2-1751-408b-95e4-32b62bba28d2",
+    "enforceSchema" : true,
+    "dateFormats" : [ ],
+    "params" : [ ],
+    "bufferDocsForSolr" : false,
+    "type" : "solr-index",
+    "skip" : false,
+    "label" : "solr-index",
+    "secretSourceStageId" : "dbbaeba2-1751-408b-95e4-32b62bba28d2"
+  } ],
+  "properties" : {
+    "secretSourcePipelineId" : "ATT_Nested_Documents"
+  }
+}

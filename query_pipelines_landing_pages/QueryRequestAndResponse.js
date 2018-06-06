@@ -9,12 +9,12 @@ var reqRes = function (request, response, _context, collection, solrServer, solr
 
     var json = JSON.parse(request);
     var someObject = "{\"response\":{\"numFound\":7,\"start\":0,\"maxScore\":1.0, \"docs\":" + json + "}}";
-
+    var headers = {"X-Fusion": "Word" };
 
     var stream = new java.io.ByteArrayInputStream(someObject.getBytes("UTF-8"));
     var v2 = new com.lucidworks.apollo.solr.response.RawResponse(stream, "application/json", "UTF-8");
 
-    var newResponse = new com.lucidworks.apollo.pipeline.query.Response(null, v2);
+    var newResponse = new com.lucidworks.apollo.pipeline.query.Response(new javax.ws.rs.core.MultivaluedHashMap(headers), v2);
     var queryRequestAndResponse = com.lucidworks.apollo.pipeline.query.QueryRequestAndResponse.create(request, newResponse, 1);
     return queryRequestAndResponse;
 }

@@ -1,0 +1,19 @@
+[{
+	"id": "myDoc1",
+	"fields": [{
+		"name": "title",
+		"value": "My first document"
+	}, {
+		"name": "body",
+		"value": "This is a simple document."
+	}]
+}, {
+	"id": "myDoc2",
+	"fields": [{
+		"name": "title",
+		"value": "My second document"
+	}, {
+		"name": "body",
+		"value": "This is another simple document."
+	}]
+}]

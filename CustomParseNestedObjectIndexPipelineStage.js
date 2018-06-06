@@ -10,8 +10,6 @@ var parseNestedObject = function (doc) {
 
     if (doc !== null && doc.getFirstFieldValue("_raw_content_") !== null) {
 
-
-
         var ex = java.lang.Exception;
         var pipelineDoc = com.lucidworks.apollo.common.pipeline.PipelineDocument;
         var outdocs = java.util.ArrayList;
