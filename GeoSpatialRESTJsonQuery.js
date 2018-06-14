@@ -85,7 +85,7 @@ var geoJSAndJava = function (request, response) {
     
     
     try {
-        var url = "https://mapservices.gis.saccounty.net/arcgistest/rest/services/ADDRESS_wSubAddress/GeocodeServer/findAddressCandidates?outFields=*&outSR=4326&f=pjson&Single+Line+Input=799+G+St";
+        var url = "ESRI or SOME OTHER MAPPING REQUEST HERE";
         var targetUrl = new URL(url);
         var ins = new BufferedReader(new InputStreamReader(targetUrl.openStream()));
 
@@ -141,91 +141,3 @@ var geoJSAndJava = function (request, response) {
 
  
 }
-
-
-/*
- 
- function (request, response) {
-
-    var e = java.lang.Exception;
-    var URL = java.net.URL;
-    var BufferedReader = java.io.BufferedReader;
-    var InputStreamReader = java.io.InputStreamReader;
-    var String = java.lang.String;
-
-    var ObjectMapper = org.codehaus.jackson.map.ObjectMapper;
-    var SerializationConfig = org.codehaus.jackson.map.SerializationConfig;
-    var e = java.lang.Exception;
-     
-
-    var mapper = new ObjectMapper();
-    var pretty = true;
-    var result = new String("");
-    var ArrayList = java.util.ArrayList;
-    try {
-        var url = "https://mapservices.gis.saccounty.net/arcgistest/rest/services/ADDRESS_wSubAddress/GeocodeServer/findAddressCandidates?outFields=*&outSR=4326&f=pjson&Single+Line+Input=799+G+St";
-        var targetUrl = new URL(url);
-        var ins = new BufferedReader(new InputStreamReader(targetUrl.openStream()));
-
-        var inputLine = "";
-        var list = new ArrayList();
-
-        while ((inputLine = ins.readLine()) !== null) {
-            //logger.info(inputLine);
-            result += inputLine;
-        }
-        ins.close();
-        logger.info("Return RESULT: " + result);
-        // convert to JSON using JavaScript
-         var json = JSON.parse(result);//new JSONObject(result);
-         logger.info(" ** JSON CREATED OKAY ** "+json.toString());
-         var candidates = json.candidates;
-          logger.info("Candidates: "+candidates.length);
-      for(var i=0; i<candidates.length; i++){
-             var candidate = candidates[i];
-             var refId = candidate.attributes.Ref_ID;
-             list.add(refId);
-             logger.info("ADD REF: "+refId);
-         }
-     
-         var query = "";
-      
-         logger.info("*** BUILD QUERY ** ");
-      
-         if(list.size() > 0){
-             var count = 0;
-             for each (var ref in list){
-                 if(count > 0){
-                     query += " OR ";
-                 }
-                 query += "FIELD_TO_QUERY:" + ref;
-                 count++;
-             }
-             
-              //request.addParam('q',query);
-           logger.info("**** QUERY: *** "+query);
-           response.initialEntity.appendStringList("solr_query", Java.to(query, Java.type('java.util.List')));
-         }
-
-    } catch (e) {
-        logger.error(e);
-    }
-
-   // return result;
-}
-
- */
-
-
- /*
-       logger.info(" ** JSON keys ** "+json.length());
-         var candidates = json.getJSONArray("candidates");
-         logger.info("** candidates has: "+candidates.length()+" items");
-      
-         for(var i=0; i<candidates.length(); i++){
-             var candidate = candidates.getJSONObject(i);
-             var refId = candidate.getJSONObject("attributes").get("Ref_ID");
-             list.add(refId);
-             logger.info("ADD REF: "+refId);
-         }
-         */
