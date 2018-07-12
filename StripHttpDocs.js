@@ -5,10 +5,10 @@
  */
 
 var stripNonSSL = function(doc){
-    if(doc !== null && doc.getId() !== null){
-        if(doc.getId().startsWith("http:")){
+    if(doc !== null && doc.getId() !== null && doc.getId().startsWith("http:")){
+        
             return null;
-        }
+        
     }
     return doc;
 }
