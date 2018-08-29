@@ -129,8 +129,8 @@ var BasicCredentialsProvider = org.apache.http.impl.client.BasicCredentialsProvi
 var HttpClientBuilder = org.apache.http.impl.client.HttpClientBuilder;
 var HttpPost = org.apache.http.client.methods.HttpPost;
 var StringEntity =  org.apache.http.entity.StringEntity;
-   var pwd = "Ixion1964";
-   var user = "admin";
+   var pwd = "YOUR FUSION ADMIN PWD";
+   var user = "YOUR FUSION ADMIN USER";
             var fusionUrl = "http://localhost:8764";
 
            var client = null;
@@ -142,7 +142,7 @@ var StringEntity =  org.apache.http.entity.StringEntity;
 
        var provider = new BasicCredentialsProvider();
    
-        var credentials  = new UsernamePasswordCredentials("admin", "Ixion1964");
+        var credentials  = new UsernamePasswordCredentials("YOUR FUSION ADMIN USER", "YOUR FUSION ADMIN PWD");
         provider.setCredentials(AuthScope.ANY, credentials);
  
         var client = HttpClientBuilder.create()
@@ -340,8 +340,8 @@ var BasicCredentialsProvider = org.apache.http.impl.client.BasicCredentialsProvi
 var HttpClientBuilder = org.apache.http.impl.client.HttpClientBuilder;
 var HttpPost = org.apache.http.client.methods.HttpPost;
 var StringEntity =  org.apache.http.entity.StringEntity;
-   var pwd = "Ixion1964";
-   var user = "admin";
+   var pwd = "YOUR FUSION ADMIN PWD";
+   var user = "YOUR FUSION ADMIN USER";
             var fusionUrl = "http://localhost:8764";
 
            var client = null;
@@ -353,7 +353,7 @@ var StringEntity =  org.apache.http.entity.StringEntity;
 
        var provider = new BasicCredentialsProvider();
    
-        var credentials  = new UsernamePasswordCredentials("admin", "Ixion1964");
+        var credentials  = new UsernamePasswordCredentials("YOUR FUSION ADMIN USER", "YOUR FUSION ADMIN PWD");
         provider.setCredentials(AuthScope.ANY, credentials);
  
         var client = HttpClientBuilder.create()
