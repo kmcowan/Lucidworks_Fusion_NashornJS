@@ -17,7 +17,7 @@ var StringBuffer = java.lang.StringBuffer;
 var String = java.lang.String;
 var e = java.lang.Exception;
 
-result = new StringBuffer();
+var result = new StringBuffer();
         try {
             var url = new String( "http://www.google.com/search?q=httpClient");
 

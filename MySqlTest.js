@@ -13,7 +13,7 @@ var ArrayList =  java.util.ArrayList;
       }catch(e){
           logger.error(e.getMessage());
       }
-
+   return doc;
  }
  
   function getConnection() {

@@ -17,17 +17,17 @@ var deduperv2 = function (doc, ctx) {
     var key = "title_s";
     var skipDoc = false;
     var maxdocs = 1000000000;
-   //  printMap(doc.getMetadata());
+    //  printMap(doc.getMetadata());
 
     // clean up from previous runs
-   // cleanUpDuperMaps(ctx, baseKey, duperMapKey);
+    // cleanUpDuperMaps(ctx, baseKey, duperMapKey);
 
     try {
         var map = null;
-        if(doc === null || doc.getId() === null){
+        if (doc === null || doc.getId() === null) {
             logger.info("** FIRST OR LAST RUN...MAKE NEW MAP ** : " + doc.getId());
-                map = new HashMap();
-                System.getProperties().put(duperMapKey, map);
+            map = new HashMap();
+            System.getProperties().put(duperMapKey, map);
         } else if (System.getProperties().get(duperMapKey) !== null) {
             map = System.getProperties().get(duperMapKey);
 
@@ -54,14 +54,14 @@ var deduperv2 = function (doc, ctx) {
                 }
 
             } else {
-               logger.info(key+" not found in document..."); 
+                logger.info(key + " not found in document...");
             }
         } else {
-          if(doc === null){
-           logger.info("doc was null..."); 
-          } else if(!doc.hasField(key)){
-              logger.info("Document has no field: "+key); 
-          }
+            if (doc === null) {
+                logger.info("doc was null...");
+            } else if (!doc.hasField(key)) {
+                logger.info("Document has no field: " + key);
+            }
         }
 
         // replace the map in the system. 
@@ -99,21 +99,29 @@ function cleanUpDuperMaps(ctx, baseKey, duperMapKey) {
     }
 }
 
-function printMap(pmap){
+function printMap(pmap) {
     var e = java.lang.Exception;
-     try{
-         
-        var props = pmap.keySet().iterator();
-        var pkey;
-        var pvalue;
-        var str = "";
-        while(props.hasNext()){
-            pkey = props.next();
-            pvalue = pmap.get(pkey);
-            str += " Key: "+pkey+" value: "+pvalue.toString() + "  ";
+    try {
+        if (pmap instanceof Java.type("java.util.Map")) {
+            var props = pmap.keySet().iterator();
+            var pkey;
+            var pvalue;
+            var str = "";
+            while (props.hasNext()) {
+                pkey = props.next();
+                pvalue = pmap.get(pkey);
+                str += " Key: " + pkey + " value: " + pvalue.toString() + "  ";
+            }
+        } else {
+            str = " ** OBJECT IS NOT A MAP...";
+            if (pmap !== null && pmap instanceof Java.type("java.lang.Object")) {
+                str += " class: " + pmap.class.getSimpleName();
+            } else if (pmap !== null) {
+                str += " object: " + pmap.toString();
+            }
         }
         logger.info(str);
-    }catch(e){
+    } catch (e) {
         logger.error(e.toString());
     }
 }
