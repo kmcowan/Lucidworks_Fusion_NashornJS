@@ -9,7 +9,7 @@ var reqRes = function (request, response, _context, collection, solrServer, solr
 
     var json = JSON.parse(request);
     var someObject = "{\"response\":{\"numFound\":7,\"start\":0,\"maxScore\":1.0, \"docs\":" + json + "}}";
-    var headers = {"X-Fusion": "Word" };
+    var headers = {"X-Fusion": "Word"};
 
     var stream = new java.io.ByteArrayInputStream(someObject.getBytes("UTF-8"));
     var v2 = new com.lucidworks.apollo.solr.response.RawResponse(stream, "application/json", "UTF-8");
@@ -63,4 +63,26 @@ var overridev2 = function (request, response, _context, collection, solrServer, 
 
     var queryRequestAndResponse = com.lucidworks.apollo.pipeline.query.QueryRequestAndResponse.create(request, newResponse, 1);
     return queryRequestAndResponse;
+}
+
+
+
+var fnc = function getQueryParams(request) {
+
+    var str = "";
+
+    if (request.getParams() !== null) {
+        var map = request.getParams();
+        for  (var e in map.keySet()) {
+            var params = request.getParam(e);
+            if (params !== null) {
+                for each (var key in params) {
+                    str += "&" + e + "=" + key;
+                }
+            }
+        }
+
+    }
+
+    return str;
 }
