@@ -22,8 +22,8 @@ var confluenceJsonReader = function (doc) {
     var e = java.lang.Exception;
 
     var docs = Java.type("java.util.ArrayList");
-    var user = new String("kev.m.cowan");
-    var pwd = new String("s3RvI@Pwd0X");
+    var user = new String(USERNAME);
+    var pwd = new String(PWD);
     var url = new String("https://cprassoc.atlassian.net/wiki/rest/api/search?cql=siteSearch~%22*%22%20AND%20type=page&label=docs&expand=content.space,space.homepage");
     var baseUrl = new String("https://cprassoc.atlassian.net/wiki");
 
